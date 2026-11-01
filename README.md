@@ -1,64 +1,76 @@
 # AI Watch with n8n
 
-A course project that collects AI news, prepares an evidence-based English report, saves it in Notion and sends an email briefing through Gmail.
+A course project that collects AI news, prepares an English report, archives it in Notion and sends a short Gmail briefing.
 
 ## Workflow
 
 ```text
-Daily schedule → Prepare feed sources → Read RSS feeds
+                 ┌─ Read Google Alerts ─┐
+Daily schedule ──┤                      ├─ Merge news feeds (Append)
+                 └─ Read MIT AI news ───┘
 → Keep recent valid articles → Prepare article evidence
 → Remove duplicate links → Group articles → Write evidence-based report
-→ Save report to Notion → Send email briefing
+→ Format report → Save report to Notion → Send email briefing
 ```
 
-The agent uses the existing Gemini Flash-Lite model connection. The workflow has 9 processing stages, plus the schedule trigger, the model and 6 explanatory notes: **17 canvas elements in total**, with **one added node** compared with the original copy.
+The two readers are independent branches. **Merge / Append** puts their articles into one stream; filtering and deduplication happen afterwards.
 
-## Sources and evidence
+The workflow uses native nodes: **no Code, HTTP Request or Loop Over Items node**. Field expressions still perform text cleaning, validation and formatting. There are **19 canvas elements**: 11 processing stages, the schedule trigger, Gemini model and 6 explanatory notes.
 
-- **Google Alerts** provides broad monitoring, usually through short snippets.
-- **[MIT News — Artificial intelligence](https://news.mit.edu/rss/topic/artificial-intelligence2)** provides a complementary research source and editorial text through its RSS feed.
+## Evidence and analysis
 
-The existing RSS reader processes both addresses. Articles from the last 24 hours are retained; missing publication dates are disclosed. Evidence is labelled as feed article content, RSS excerpt or title only. Editorial text is cleaned and limited to 5,000 characters per article. The workflow does not fetch original article pages or bypass access restrictions.
+- Google Alerts provides broad monitoring, generally through short snippets.
+- [MIT News — Artificial intelligence](https://news.mit.edu/rss/topic/artificial-intelligence2) provides complementary research coverage and editorial text through its RSS feed.
 
-One model request receives at most 6 recent candidates per source. It selects up to 8 useful stories and produces structured JSON. The prompt requires English summaries grounded in the supplied evidence, exact source metadata, clear limitations and supported interpretations. Short snippets must not be padded with invented details.
+The workflow keeps articles from the last 24 hours and discloses missing dates. It preserves source metadata and labels editorial feed content, excerpts and title-only evidence. Feed text is cleaned and bounded; original article pages are not fetched.
 
-## Outputs
+One agent stage receives at most six recent candidates per source and selects up to eight relevant stories. Its prompt requires English, attributed claims, clear uncertainty, useful summaries and supported trends. Titles remain as supplied by the publisher.
 
-**Notion:** dated title, executive summary, article sections with source links, publication date, category, summary, practical relevance and evidence limitations, followed by supported trends and coverage limits. Native Notion headings and paragraphs replace the previous raw XML block.
+The native **Format report** node parses the structured response and prepares the delivery data. Article links and metadata come from the collected evidence; unsupported selections are excluded. This does not guarantee factual accuracy of the model’s prose.
 
-**Gmail:** a one-minute English briefing with up to five short executive takeaways and a button linking to the full Notion report. Detailed article summaries, source analysis and trends stay in Notion. Fewer takeaways are sent when evidence is limited. Each takeaway is capped at 220 characters. Invalid report data or a missing/unsafe Notion URL stops email delivery.
+## Different roles for Notion and Gmail
+
+**Notion** is the detailed archive: dated report, executive summary, article sections with source URLs, category, summary, practical relevance and evidence limits, followed by supported trends.
+
+**Gmail** is the notification: up to five short executive points and a button linking to Notion. It does not repeat the detailed article sections. Fewer points are used when evidence is limited.
+
+The Notion node uses a static native block template with expressions in text fields. A collection-level expression proved incompatible on the tested instance and produced empty blocks; the final template was verified by reading the created page.
 
 ## Repository
 
 | Folder | Contents |
 |---|---|
-| [`workflows/`](workflows/) | [`Veille automatique.workflow.ts`](workflows/Veille%20automatique.workflow.ts): the workflow source. |
-| [`skills/`](skills/) | `interview`, `doubt-driver-dev` and `hostile-review`, including the interview specification template. |
+| [`workflows/`](workflows/) | [`workflow.ts`](workflows/workflow.ts), the sanitized workflow source. |
+| [`skills/`](skills/) | `interview`, `doubt-driver-dev` and `hostile-review`. |
 | [`videos/`](videos/) | Demonstration video location. |
 
-Only the **TypeScript workflow** is distributed here. It uses the `@n8n/workflow-sdk` builder format generated by **n8ncli** (`@workflows-accelerator/n8n-cli`). The n8n editor imports JSON, so this TypeScript file must be compiled or synchronised using compatible tooling before importing it into another instance.
+Only the TypeScript workflow is distributed. It uses the `@n8n/workflow-sdk` builder format generated by **n8ncli** (`@workflows-accelerator/n8n-cli`). The editor imports JSON, so the TypeScript must be compiled or synchronised with compatible tooling for another instance.
 
 ## Configuration
 
-The public source omits personal connections and replaces personal settings with placeholders. Before using it:
+The public source removes credential references and replaces personal values with placeholders:
 
-1. Set the Google Alerts feed URL in **Prepare feed sources**.
-2. Configure the Gemini, Notion and Gmail connections securely in n8n.
-3. Set the Notion data source in **Save report to Notion**. Preserve or adapt the `Date de veille` date property mapping.
-4. Set the recipient in **Send email briefing**.
-5. Check model availability and keep the workflow timezone at **Europe/Paris**.
-6. Test safely before publishing. A full execution creates a Notion page and sends an email.
+1. Set your feed in **Read Google Alerts**.
+2. Configure Gemini, Notion and Gmail credentials securely in n8n.
+3. Select your Notion data source and preserve or adapt the `Date de veille` property mapping.
+4. Set the Gmail recipient.
+5. Check model availability and keep the timezone at **Europe/Paris**.
+6. Test before publishing. A full execution creates a real page and sends a real email.
 
-## Verification and limits
+## Live verification
 
-Real feed responses were parsed locally: Google Alerts returned 20 items and MIT returned 50. At the 1 November 2026 check, none of the MIT items fell inside the last 24 hours; the workflow does not reintroduce older articles to fill a quota.
+The final manual test, **execution 267**, succeeded in **4.45 seconds**, shortly after midnight on **2 November 2026 (Europe/Paris)**:
 
-Local checks covered text cleaning, date filtering, link deduplication, aggregation inputs, native Notion blocks, HTML escaping and rejection of invalid report JSON or unknown citations. The TypeScript passed local n8ncli validation. Formatting checks used a synthetic model response: they do not establish the quality of a real Gemini response or successful delivery.
+- Google Alerts: 20 articles; MIT: 50; Merge: 70.
+- The 24-hour filter retained 20 articles. No MIT article was recent enough in this test.
+- Gemini and Format report completed.
+- A dated Notion report was created and its actual text, sources and sections were read back.
+- Gmail returned a message ID with the `SENT` label.
 
-The edited copy was saved without publishing or executing it. The original and the other workflows were unchanged at read-back. No test email or Notion page was created. End-to-end execution remains to be verified in a controlled run.
+Earlier attempts exposed expression-boundary and Notion block-formatting defects. Those defects were fixed. Earlier dated test pages were preserved; empty test pages were populated from saved execution data without sending more emails. These archive repairs are distinct from the final workflow test.
 
-Deduplication is within a run, not persistent across days. Repeated runs may create multiple Notion reports on the same date. Coverage is limited to two feeds and available text; it cannot guarantee all important AI news. Gemini availability and strict JSON generation remain operational dependencies.
+The copy was saved but not published by this work. No other workflow was intentionally modified.
 
-## Demonstration video
+## Limits
 
-The video will be added to [`videos/`](videos/). Suggested sequence: source selection → evidence preparation → bounded AI analysis → Notion report structure → Gmail briefing. Distinguish a format preview from a live execution result.
+Coverage is limited to two feeds and their available text. Short excerpts cannot support deep analysis, and assertions in sources may be wrong. Structural checks cannot prove factual accuracy. Deduplication is within a run; repeated runs can create multiple reports for the same date. The static Notion template can leave empty article blocks when fewer than eight stories are selected. A successful manual test does not prove future scheduled runs or provider availability.

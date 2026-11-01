@@ -49,7 +49,7 @@ Before treating the spec as ready for implementation, summarize scope, behavior,
 
 ## Create the specification
 
-Use [references/spec-template.md](references/spec-template.md), adapting or removing irrelevant sections. The specification is a functional and technical project brief, not an n8n workflow JSON export.
+Structure the specification around context, scope, functional requirements, systems and data, constraints, acceptance criteria, risks, open decisions and the implementation handoff. It is a functional and technical project brief, not an n8n workflow JSON export.
 
 Make the spec detailed enough for `doubt-driver-dev` to start implementation without asking again about information already captured. Include concrete acceptance criteria, expected failure behavior, test expectations, constraints, and boundaries. Clearly label implementation ideas as proposals and unverified technical assumptions as open questions. Do not present unverified integration capabilities as facts.
 
