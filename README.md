@@ -26,7 +26,7 @@ One model request receives at most 6 recent candidates per source. It selects up
 
 **Notion:** dated title, executive summary, article sections with source links, publication date, category, summary, practical relevance and evidence limitations, followed by supported trends and coverage limits. Native Notion headings and paragraphs replace the previous raw XML block.
 
-**Gmail:** an English HTML briefing with source links and a link to the Notion report when the node returns one. Report JSON, article metadata and citations are checked before delivery; malformed output stops the workflow.
+**Gmail:** a one-minute English briefing with up to five short executive takeaways and a button linking to the full Notion report. Detailed article summaries, source analysis and trends stay in Notion. Fewer takeaways are sent when evidence is limited. Each takeaway is capped at 220 characters. Invalid report data or a missing/unsafe Notion URL stops email delivery.
 
 ## Repository
 
