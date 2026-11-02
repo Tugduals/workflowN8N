@@ -1,4 +1,4 @@
-# Veille IA automatisée avec n8n
+# Automated AI Watch with n8n
 
 Projet réalisé dans le cadre d’un cours : créer un workflow de veille sur l’intelligence artificielle, puis documenter sa conception et sa réalisation.
 
