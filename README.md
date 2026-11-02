@@ -15,7 +15,6 @@ An n8n workflow that collects AI news from Google Alerts and Google News, analys
 
 - [workflows/workflow.ts](workflows/workflow.ts) — TypeScript workflow definition, managed with n8ncli.
 - [skills/](skills/) — the three project skills: interview, doubt-driver-dev and hostile-review.
-- [images/workflow.png](images/workflow.png) — workflow screenshot.
 - [videos/](videos/) — demonstration video and transcript.
 
 Before running, connect your Gemini, Notion and Gmail credentials, set your Notion data source ID, Google Alerts RSS feed and email recipient, and adjust the RSS sources as needed. The report is based on RSS evidence; original articles remain available through their source links.
