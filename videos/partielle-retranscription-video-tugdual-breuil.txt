@@ -1,0 +1,43 @@
+Transcription relue — vidéo AI Watch
+
+Note : transcription corrigée à partir du texte automatique fourni, sans vérification mot à mot à l’écoute. Les passages manifestement mal reconnus sont indiqués entre crochets.
+
+Bonjour. Tout d’abord, je suis désolé : je ne suis vraiment pas très à l’aise en vidéo, donc je pense que ça va être assez malaisant, et je m’en excuse par avance.
+
+C’est [nom du cours/projet mal reconnu]. Comme projet, j’ai choisi l’automatisation d’une veille sur l’IA. Ce que mon workflow va faire, c’est chercher l’actualité sur l’IA et me l’envoyer sur Notion et Gmail.
+
+Comme déclencheur, on a le clic manuel. C’est pour le test ; normalement, le workflow est planifié tous les sept jours, à 7 heures du matin, pour que je reçoive les nouveaux articles.
+
+Comme outils, on a les flux RSS de Google Alerts et de Google News. Google News est en anglais pour avoir une diversité d’articles. Le flux RSS de Google Alerts est aussi en anglais, mais je reçois principalement des résultats en français ; je ne sais pas trop pourquoi.
+
+Ensuite, on utilise Gemini Flash-Lite pour faire l’analyse et le classement. Je mets tout ça dans Notion et dans Gmail.
+
+Les résultats, ce sont les dix articles les plus pertinents des sept derniers jours, classés, avec un résumé en trois points que je reçois par mail. Les articles qui parlent de la même chose sont regroupés pour éviter les répétitions. Dans Notion, il y a le rapport complet ; Gmail contient une version plus condensée.
+
+Pour les contraintes, je voulais privilégier les outils gratuits. Ce n’est pas tout à fait le cas, parce qu’on utilise les deux dollars gratuits [crédits/coût mal reconnu]. Les sources sont uniquement publiques : on n’utilise pas de journaux spécialisés payants. Les sources identiques sont dédupliquées.
+
+Comment ça fonctionne ? Normalement, c’est le Schedule Trigger ; pour la démonstration, on va utiliser le clic, qui lance le workflow. On a « Read Google News », qui lit le flux RSS de Google News, et « Google Alerts RSS ». Je peux montrer l’alerte que j’ai créée : j’ai mis des mots-clés en français et en anglais dans une seule alerte, parce que c’est plus simple. J’ai aussi mis les noms des IA dont je veux suivre l’actualité.
+
+Google News ne renvoie pas d’articles dans cette exécution. Google Alerts en renvoie vingt. Les articles entrent ensuite dans Merge pour être réunis dans une seule liste.
+
+Ensuite, on vérifie que les articles sont valides : ils doivent avoir un titre, une description et une date, et dater de moins de sept jours. Si l’article ne passe pas le filtre, il ne continue pas ; s’il le passe, il poursuit le workflow.
+
+Après, on nettoie et on rassemble le titre, la date, la source, le lien et l’extrait. Pour les articles en anglais, il y a aussi une traduction française.
+
+J’ai préparé le prompt avec l’aide de l’IA. À la fin, le rapport cite les sources et ajoute un avertissement pour préciser que l’analyse n’est pas infaillible.
+
+Le nœud suivant lit le rapport structuré et réassocie les liens, les identifiants et les sources d’origine. Il signale également les limites. Ensuite, tout arrive dans Notion. J’ai connecté mon compte Notion, puis mon compte Gmail.
+
+Une fois que le workflow est prêt, on peut le publier. Le Schedule Trigger n’est pas [actif/configuré — passage mal reconnu], donc on va utiliser le clic. Maintenant, on lance le workflow.
+
+On voit le classement de dix articles. Certains articles parlent de la même chose : ils sont regroupés comme deux sources associées. Le rapport présente aussi les tendances communes, les évolutions, les conséquences possibles, les sujets à surveiller et les incertitudes, avec les limites globales des sources.
+
+Je reçois également la veille par mail. C’est beaucoup plus condensé et plus simple à lire : j’ai trois points rapides et un top cinq de la semaine. Il y a aussi les liens. Le mail renvoie vers Notion pour consulter le rapport complet.
+
+Pour les commandes, je ne me rappelle plus très bien : c’est n8ncli. Il y a pull et push. Pull récupère le fichier du workflow depuis n8n vers mes fichiers ; push fait l’inverse et envoie les changements vers n8n. Avec dry run, on simule les opérations sans rien modifier. Là, il nous indique que tout est à jour.
+
+Pour les retours, j’ai beaucoup apprécié ce cours. Le point négatif, c’est qu’on a parfois mis du temps à trouver certaines choses. Je ne sais pas si on aurait pu faire autrement : même si les informations avaient été envoyées à l’avance, certains éléments auraient été difficiles à prévoir. Pour OpenChamber, par exemple, je pense que personne ne pouvait prévoir qu’il faudrait un VPN ou autre chose. Mais c’était vraiment un super cours, et je suis intéressé pour continuer dans ce domaine. Je cherche maintenant une alternance dans l’automatisation.
+
+Merci de m’avoir écouté, et à bientôt.
+
+[La reconnaissance automatique a produit des mots en portugais et en allemand à la fin d’un passage ; ils ne sont pas repris ici car ils ne forment pas une transcription fiable.]
