@@ -1,5 +1,11 @@
 const gemini_Flash_Lite_model = languageModel({ type: '@n8n/n8n-nodes-langchain.lmChatGoogleGemini', version: 1.2, config: { name: 'Gemini Flash-Lite model', parameters: { modelName: 'models/gemini-flash-lite-latest', options: { maxOutputTokens: 12000 } }, credentials: { googlePalmApi: newCredential('n8n-server(user@example.com)', 'Ki80EOdD9H880b35') }, position: [1688, 504] } });
 
+const schedule_trigger = trigger({
+  type: 'n8n-nodes-base.scheduleTrigger',
+  version: 1.4,
+  config: { name: 'Schedule Trigger', parameters: { rule: { interval: [{ triggerAtHour: 8 }] } }, position: [48, 80] }
+});
+
 const click_to_launch = trigger({
   type: 'n8n-nodes-base.manualTrigger',
   version: 1,
@@ -93,3 +99,4 @@ export default wf
     .to(parse_AI_report_restore_links)
     .to(save_report_to_Notion)
     .to(send_email_briefing)))
+  .add(schedule_trigger.to([read_Google_News, google_Alerts_RSS]))
