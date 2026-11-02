@@ -1,45 +1,21 @@
-# Automated AI Watch with n8n
+# Automated AI Monitoring
 
-Projet réalisé dans le cadre d’un cours : créer un workflow de veille sur l’intelligence artificielle, puis documenter sa conception et sa réalisation.
+An n8n workflow that collects AI news from Google Alerts and Google News, analyses it with Gemini Flash-Lite, then creates a detailed Notion report and sends a short Gmail briefing.
 
-## Objectif
+![Workflow overview](images/workflow.png)
 
-Collecter des articles issus de deux flux RSS, en produire une synthèse en anglais avec Google Gemini, archiver le rapport détaillé dans Notion et envoyer un résumé par Gmail.
+## How it works
 
-## Aperçu du workflow
+1. **Collect** — a manual click starts both RSS feeds; Merge combines their items.
+2. **Filter** — recent, relevant articles are kept and duplicates removed.
+3. **Analyse** — Gemini ranks stories using RSS titles and excerpts. It must state evidence limits; article pages are not downloaded.
+4. **Deliver** — Notion receives the detailed report; Gmail sends key points and source links.
 
-![Capture recadrée du workflow n8n](images/workflow.png)
+## Repository contents
 
-## Fonctionnement
+- [workflows/workflow.ts](workflows/workflow.ts) — TypeScript workflow definition, managed with n8ncli.
+- [skills/](skills/) — the three project skills: interview, doubt-driver-dev and hostile-review.
+- [images/workflow.png](images/workflow.png) — workflow screenshot.
+- [videos/](videos/) — demonstration video and transcript.
 
-Le déclenchement quotidien lance en parallèle la lecture de Google Alerts et de MIT News. Le nœud **Merge** rassemble les deux flux, puis le workflow filtre les articles récents, prépare les informations utiles et supprime les liens en double.
-
-Gemini rédige ensuite une synthèse à partir des éléments fournis par les flux RSS. Le rapport détaillé est enregistré dans Notion et un bref résumé accompagné d’un lien est envoyé par Gmail.
-
-Les flux RSS fournissent les textes utilisés pour l’analyse : le workflow ne récupère pas séparément le contenu complet des pages des articles. Les affirmations de la synthèse doivent donc être vérifiées auprès des sources.
-
-## Contenu du dépôt
-
-| Dossier | Contenu |
-|---|---|
-| [`workflows/`](workflows/) | Le workflow n8n en TypeScript : [`workflow.ts`](workflows/workflow.ts). |
-| [`skills/`](skills/) | Les trois skills utilisés pour structurer le travail avec l’assistant IA. |
-| [`videos/`](videos/) | Emplacement prévu pour la vidéo de démonstration. |
-
-### Les trois skills
-
-1. [**interview**](skills/interview/SKILL.md) : clarifier le besoin et préparer une spécification.
-2. [**doubt-driver-dev**](skills/doubt-driver-dev/SKILL.md) : développer la solution et vérifier son comportement.
-3. [**hostile-review**](skills/hostile-review/SKILL.md) : examiner le résultat, repérer les défauts et les limites.
-
-Ces skills sont des consignes pour l’assistant de développement. Ils ne s’importent pas comme des nœuds n8n.
-
-## Configuration
-
-Le fichier TypeScript publié ne contient pas de références personnelles ou d’identifiants de connexion. Pour utiliser le workflow dans votre environnement, configurez dans n8n les flux RSS, les accès Gemini, Notion et Gmail, ainsi que la source de données Notion et le destinataire de l’e-mail. Le fuseau horaire est réglé sur **Europe/Paris**.
-
-Le workflow est fourni au format TypeScript généré avec **n8ncli**. Ce fichier sert à lire et versionner la définition du workflow avec l’outillage n8n correspondant.
-
-## Vidéo de démonstration
-
-La vidéo de présentation sera ajoutée dans [`videos/`](videos/). Elle montrera le workflow et expliquera ses principales étapes.
+Before running, connect your Gemini, Notion and Gmail credentials, set your Notion data source ID, Google Alerts RSS feed and email recipient, and adjust the RSS sources as needed. The report is based on RSS evidence; original articles remain available through their source links.
