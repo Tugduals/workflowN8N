@@ -2,7 +2,7 @@
 
 An n8n workflow that collects AI news from Google Alerts and Google News, analyses it with Gemini Flash-Lite, then creates a detailed Notion report and sends a short Gmail briefing.
 
-![Workflow overview](images/workflow.png)
+![Workflow overview](workflow.png)
 
 ## How it works
 
